@@ -28,6 +28,17 @@ class RecipeView {
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   };
 
+  addHandlerRender(handler) {
+    // making an event array and iterating over it to create event listeners
+    ['hashchange', 'load'].forEach((ev) =>
+      window.addEventListener(ev, handler)
+    );
+
+    // Replaces multiple eventlisteners hard coded
+    // window.addEventListener('hashchange', showRecipe);
+    // window.addEventListener('load', showRecipe);
+  }
+
   #generateMarkup() {
     return `
       <figure class="recipe__fig">
