@@ -474,7 +474,7 @@ const controlRecipes = async function() {
         // 2. Rendering recipe
         _recipeViewJsDefault.default.render(_modelJs.state.recipe);
     } catch (err) {
-        console.log(err);
+        _recipeViewJsDefault.default.renderError();
     }
 };
 const init = function() {
@@ -513,6 +513,7 @@ const loadRecipe = async function(id) {
     } catch (err) {
         //Temp error handeling
         console.error(`${err} 💥💥💥💥💥💥💥`);
+        throw err;
     }
 };
 
@@ -12962,6 +12963,8 @@ var _fractional = require("fractional"); // had to destructure so I didn't get F
 class RecipeView {
     #parentElement = document.querySelector('.recipe');
     #data;
+    #errorMessage = 'We could not find your recipe, please try another one.';
+    #message = '';
     render(data) {
         this.#data = data;
         const markup = this.#generateMarkup();
@@ -12973,9 +12976,19 @@ class RecipeView {
     }
     renderASpinner = function() {
         const markup = `\n      <div class="spinner">\n        <svg>\n          <use href="${_iconsSvgDefault.default}#icon-loader"></use>\n        </svg>\n      </div>\n    `;
-        this.#parentElement.innerHTML = '';
+        this.#clear();
         this.#parentElement.insertAdjacentHTML('afterbegin', markup);
     };
+    renderError(message = this.#errorMessage) {
+        const markup = `<div class="error">\n  <div>\n    <svg>\n      <use href="${_iconsSvgDefault.default}#icon-alert-triangle"></use>\n    </svg>\n  </div>\n  <p>${message}</p>\n</div>`;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
+    renderMessage(message = this.#message) {
+        const markup = `<div class="message">\n  <div>\n    <svg>\n      <use href="${_iconsSvgDefault.default}#icon-smile"></use>\n    </svg>\n  </div>\n  <p>${message}</p>\n</div>`;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    }
     addHandlerRender(handler) {
         // making an event array and iterating over it to create event listeners
         [
